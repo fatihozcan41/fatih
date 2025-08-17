@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from .base import Base
+from .associations import permission_role
 
 class Permission(Base):
     __tablename__ = "permissions"
@@ -9,4 +10,4 @@ class Permission(Base):
     name = Column(String(80), nullable=False)
     slug = Column(String(80), unique=True, nullable=False)
 
-    roles = relationship("Role", secondary="permission_role", back_populates="permissions")
+    roles = relationship("Role", secondary=permission_role, back_populates="permissions")

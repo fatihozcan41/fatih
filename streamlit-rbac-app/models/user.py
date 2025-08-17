@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from .base import Base
+from .associations import role_user
 
 class User(Base):
     __tablename__ = "users"
@@ -14,4 +15,4 @@ class User(Base):
     last_login_at = Column(DateTime, nullable=True)
     force_password_change = Column(Boolean, default=False, nullable=False)
 
-    roles = relationship("Role", secondary="role_user", back_populates="users")
+    roles = relationship("Role", secondary=role_user, back_populates="users")

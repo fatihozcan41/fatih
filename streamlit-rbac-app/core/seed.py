@@ -4,8 +4,8 @@ from models.base import Base
 from models.user import User
 from models.role import Role
 from models.permission import Permission
-from models.role_user import RoleUser
-from models.permission_role import PermissionRole
+
+
 from core.db import init_engine
 from core.security import hash_password
 import streamlit as st
@@ -48,12 +48,12 @@ def main():
 
         for perm in db.execute(select(Permission)).scalars():
             # grant all to admin
-            if not db.execute(select(PermissionRole).where(PermissionRole.role_id==admin.id, PermissionRole.permission_id==perm.id)).scalar_one_or_none():
-                db.add(PermissionRole(role_id=admin.id, permission_id=perm.id))
+            if perm not in admin.permissions:
+                admin.permissions.append(perm)
             # viewer only read permissions
             if perm.slug in ("users.read", "reports.read"):
-                if not db.execute(select(PermissionRole).where(PermissionRole.role_id==viewer.id, PermissionRole.permission_id==perm.id)).scalar_one_or_none():
-                    db.add(PermissionRole(role_id=viewer.id, permission_id=perm.id))
+                if perm not in viewer.permissions:
+                    viewer.permissions.append(perm)
         db.commit()
 
         # create admin user
@@ -73,7 +73,7 @@ def main():
             db.add(u)
             db.commit()
             db.refresh(u)
-            db.add(RoleUser(user_id=u.id, role_id=admin.id))
+            u.roles.append(admin)
             db.commit()
             print("Admin kullanıcı oluşturuldu:", admin_email)
         else:
