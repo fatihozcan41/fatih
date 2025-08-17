@@ -1,7 +1,6 @@
 import streamlit as st
-from core.auth import login_form, get_current_user, logout
-from core.db import get_session
 import pathlib
+from core.db import get_session
 
 st.set_page_config(page_title="Kontrol Paneli", layout="wide")
 
@@ -21,6 +20,8 @@ def navbar():
     st.markdown('<div class="navbar"><div><strong>RBAC Demo</strong></div><div>{}</div></div>'.format(
         (user.name if user else "")
     ), unsafe_allow_html=True)
+
+from core.auth import login_form, get_current_user, logout
 
 navbar()
 
