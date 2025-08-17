@@ -3,6 +3,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from datetime import datetime
 from .db import get_session
+
+    from sqlalchemy.exc import OperationalError
+    from core.bootstrap import ensure_db_initialized
+
 from .security import verify_password
 from models.user import User
 from models.role import Role
@@ -19,6 +23,11 @@ def login_form():
             st.error("Bilgileri doldurunuz.")
             return False
         with get_session() as db:
+            try:
+            q = db.execute(select(User).where((User.email == username_or_email) | (User.username == username_or_email))).scalar_one_or_none()
+        except OperationalError:
+            # Recreate tables & seed, then retry once
+            ensure_db_initialized()
             q = db.execute(select(User).where((User.email == username_or_email) | (User.username == username_or_email))).scalar_one_or_none()
             if not q or not q.status:
                 st.error("Kullanıcı bulunamadı veya pasif.")
@@ -40,6 +49,10 @@ def get_current_user(db=None):
         return None
     if db is None:
         from .db import get_session
+
+    from sqlalchemy.exc import OperationalError
+    from core.bootstrap import ensure_db_initialized
+
         with get_session() as dbs:
             return dbs.get(User, data["id"])
     else:

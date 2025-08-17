@@ -8,7 +8,9 @@ def get_db_url():
     db_url = st.secrets.get("DATABASE_URL", "")
     if not db_url:
         # local sqlite
-        return "sqlite:///app.db"
+        from pathlib import Path
+        base_dir = Path(__file__).resolve().parent.parent
+        return f"sqlite:///{(base_dir / 'app.db').as_posix()}"
     return db_url
 
 _engine = None

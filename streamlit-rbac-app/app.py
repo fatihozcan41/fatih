@@ -5,6 +5,9 @@ import pathlib
 
 st.set_page_config(page_title="Kontrol Paneli", layout="wide")
 
+from core.bootstrap import ensure_db_initialized
+ensure_db_initialized()
+
 BASE_DIR = pathlib.Path(__file__).parent
 
 # Inject minimal bootstrap-like css with safe paths
