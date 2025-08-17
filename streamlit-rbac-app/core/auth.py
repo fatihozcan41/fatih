@@ -58,3 +58,17 @@ def logout():
     if SESSION_USER_KEY in st.session_state:
         del st.session_state[SESSION_USER_KEY]
     st.rerun()
+
+
+def user_has_permission(user: User, slug: str, db) -> bool:
+    """Kullanıcının rol/izin ilişkilerinden hedef izne sahip olup olmadığını kontrol eder."""
+    if not user:
+        return False
+    u = db.get(User, user.id)
+    if u is None:
+        return False
+    for r in u.roles:
+        for p in r.permissions:
+            if p.slug == slug:
+                return True
+    return False
