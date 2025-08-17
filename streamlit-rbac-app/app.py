@@ -5,10 +5,12 @@ import pathlib
 
 st.set_page_config(page_title="Kontrol Paneli", layout="wide")
 
-# Inject minimal bootstrap-like css
-with open("static/bootstrap.min.css", "r", encoding="utf-8") as f:
+BASE_DIR = pathlib.Path(__file__).parent
+
+# Inject minimal bootstrap-like css with safe paths
+with open(BASE_DIR / "static" / "bootstrap.min.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-with open("static/app.css", "r", encoding="utf-8") as f:
+with open(BASE_DIR / "static" / "app.css", "r", encoding="utf-8") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def navbar():
