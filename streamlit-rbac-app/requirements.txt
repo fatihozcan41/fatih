@@ -1,5 +1,5 @@
 streamlit
-sqlalchemy
+sqlalchemy>=1.4
 pandas
 openpyxl
 passlib[bcrypt]
